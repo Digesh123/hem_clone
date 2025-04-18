@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // base:'/hem_1/',
+  // base:'/hem_clone/',
   plugins: [
     react(),
     tailwindcss(),
