@@ -144,7 +144,7 @@ const Navbar = ({ setActivePage, activePage }) => {
 
 
             <a
-              href="/profile/dummy.pdf"
+              href="/dummy.pdf"
               download
               className="px-4 py-2 bg-orange-500 text-white rounded-full text-sm font-medium hover:bg-orange-600 transition-colors"
             >
