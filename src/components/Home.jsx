@@ -4,8 +4,8 @@ import WhyChooseUs from './WhyChooseUs'
 import Downloadpdf from './Downloadpdf'
 import { root1 } from 'postcss'
 
-const root1 = ReactDOM.createRoot(document.getElementById('root1'));
- root1.render(
+const approot = ReactDOM.createRoot(document.getElementById('root1'));
+ approot.render(
         <Downloadpdf
         />
 );
