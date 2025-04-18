@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import { HiMenuAlt4, HiX } from 'react-icons/hi';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { BASE_URL } from '../config';
 
 const Navbar = ({ setActivePage, activePage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showServicesDropdown, setShowServicesDropdown] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -26,19 +29,33 @@ const Navbar = ({ setActivePage, activePage }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = "https://digesh123.github.io/hem_clone/dummy.pdf";
+    link.download = "Profile.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const navItems = [
     { title: 'Home', value: 'home' },
     { title: 'About Us', value: 'about' },
     {
-      title: 'Services', value: 'service', subItems: [
-        { title: 'Download Profile', href: 'https://digesh123.github.io/hem_clone/dummy.pdf' }
+      title: 'Services',
+      value: 'service',
+      subItems: [
+        {
+          title: 'Download Profile',
+          action: handleDownload,
+        }
       ]
     },
     { title: 'Our Team', value: 'teams' },
     { title: 'Our Clients', value: 'client' },
     { title: 'Collection in Dubai', value: 'clientDubai' },
     { title: 'Collection in India', value: 'clientIndia' },
-    { title: 'FAQ', value: 'faq' },
+    { title: "FAQ", value: 'faq' },
   ];
 
   return (
@@ -46,8 +63,18 @@ const Navbar = ({ setActivePage, activePage }) => {
       <div className="bg-orange-800 text-white py-2">
         <div className="flex justify-between px-4 items-center">
           <div className="flex space-x-4">
-            {[{ Icon: FaLinkedin, link: "https://www.linkedin.com/company/hem-groups/" }, { Icon: FaInstagram, link: "https://www.instagram.com/hemgroup_" }].map(({ Icon, link }, i) => (
-              <motion.a key={i} href={link} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
+            {[
+              { Icon: FaLinkedin, link: "https://www.linkedin.com/company/hem-groups/" },
+              { Icon: FaInstagram, link: "https://www.instagram.com/hemgroup_" },
+            ].map(({ Icon, link }, i) => (
+              <motion.a
+                key={i}
+                href={link}
+                target='_blank'
+                className="hover:text-orange-400 transition-colors"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              >
                 <Icon size={16} />
               </motion.a>
             ))}
@@ -57,37 +84,97 @@ const Navbar = ({ setActivePage, activePage }) => {
       </div>
 
       <header className={`sticky top-0 w-full z-50 ${scrolled ? 'py-2' : 'py-3'} bg-orange-200 shadow-md`}>
-        <div className="mx-auto px-4 md:px-12">
+        <div className={`mx-auto px-4 md:px-12 transition-all duration-300 ${scrolled ? 'max-w-[90%]' : 'max-w-full'}`}>
           <div className="flex items-center justify-between h-16">
-            <motion.div className="flex-shrink-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} onClick={() => window.location.reload()}>
+            <motion.div
+              className="flex-shrink-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              onClick={() => { window.location.reload(); }}
+            >
               <img src={BASE_URL + "/logo/logo.png"} alt="Logo" className="h-8 md:h-10 w-auto" />
             </motion.div>
 
-            <nav className="hidden md:flex items-center space-x-1">
-              {navItems.map((item, index) => (
-                <div key={index} className="relative group">
-                  <button onClick={() => handleNavClick(item.value)} className={`cursor-pointer px-4 py-2 capitalize font-medium text-sm ${activePage === item.value ? 'text-orange-600' : 'text-orange-700 hover:text-orange-600'}`}>
-                    {item.title}
-                  </button>
-                  {item.subItems && (
-                    <div className="absolute left-0 top-full bg-white shadow-md rounded-md py-1 hidden group-hover:block z-50">
-                      {item.subItems.map((sub, subIdx) => (
-                        <a key={subIdx} href={sub.href} download target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-orange-700 hover:bg-orange-100">
+            <motion.nav className="hidden md:flex items-center space-x-1">
+              {navItems.map((page, index) => (
+                <div key={index} className="relative">
+                  <motion.button
+                    onClick={() => page.subItems ? null : handleNavClick(page.value)}
+                    className={`cursor-pointer relative px-4 py-2 capitalize font-medium text-sm tracking-wide ${activePage === page.value ? 'text-orange-600' : 'text-orange-700 hover:text-orange-600'}`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {page.title}
+                    {page.subItems && (
+                      <IoIosArrowDown className="inline ml-1" />
+                    )}
+                    {activePage === page.value && !page.subItems && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-orange-600 rounded-full mx-2"
+                        layoutId="activeTab"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                  </motion.button>
+                  {page.subItems && (
+                    <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50">
+                      {page.subItems.map((sub, subIndex) => (
+                        <button
+                          key={subIndex}
+                          onClick={sub.action}
+                          className="block w-full px-4 py-2 text-sm text-left text-orange-700 hover:bg-orange-100"
+                        >
                           {sub.title}
-                        </a>
+                        </button>
                       ))}
                     </div>
                   )}
                 </div>
               ))}
-              <motion.button className="ml-4 px-5 py-2 bg-orange-600 text-white rounded-full font-medium text-sm" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNavClick('contact')}>
+            </motion.nav>
+
+            <div className="hidden md:flex items-center space-x-4">
+              <motion.button
+                className="px-5 py-2 bg-orange-600 text-white rounded-full font-medium text-sm cursor-pointer"
+                whileHover={{ scale: 1.05, boxShadow: "0 10px 15px rgba(59, 130, 246, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleNavClick('contact')}
+              >
                 Contact Us
               </motion.button>
-            </nav>
+            </div>
 
             <div className="flex md:hidden">
-              <motion.button className="p-2" whileTap={{ scale: 0.9 }} aria-label="Toggle menu" onClick={toggleMenu}>
-                {isMenuOpen ? <HiX size={24} className="text-orange-800" /> : <HiMenuAlt4 size={24} className="text-orange-800" />}
+              <motion.button
+                className="p-2 rounded-md hover:bg-orange-100 active:bg-orange-200 transition-colors focus:outline-none"
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleMenu}
+                aria-label="Toggle menu"
+              >
+                <AnimatePresence mode="wait">
+                  {isMenuOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <HiX size={20} className="text-orange-800" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <HiMenuAlt4 size={20} className="text-orange-800" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.button>
             </div>
           </div>
@@ -96,32 +183,53 @@ const Navbar = ({ setActivePage, activePage }) => {
 
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div key="mobileMenu" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="md:hidden bg-orange-100 shadow-lg">
-            <ul className="flex flex-col px-6 py-4 space-y-2">
-              {navItems.map((item, index) => (
-                <li key={index}>
-                  <button onClick={() => handleNavClick(item.value)} className="w-full text-left text-orange-800 font-medium py-2">
-                    {item.title}
-                  </button>
-                  {item.subItems && (
-                    <ul className="ml-4 mt-1 space-y-1">
-                      {item.subItems.map((sub, subIndex) => (
-                        <li key={subIndex}>
-                          <a href={sub.href} download target="_blank" rel="noopener noreferrer" className="block text-sm text-orange-700 hover:text-orange-900">
-                            {sub.title}
-                          </a>
-                        </li>
+          <motion.div
+            className="bg-white shadow-lg md:hidden overflow-hidden z-40"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.nav className="flex flex-col divide-y divide-orange-100">
+              {navItems.map((page, index) => (
+                <div key={index}>
+                  <motion.button
+                    onClick={() => page.subItems ? setShowServicesDropdown(!showServicesDropdown) : handleNavClick(page.value)}
+                    className={`w-full text-left py-3 px-4 capitalize font-medium transition-colors flex justify-between items-center ${activePage === page.value ? 'bg-orange-50 text-orange-600' : 'text-orange-800 hover:bg-orange-50 active:bg-orange-100'}`}
+                  >
+                    {page.title}
+                    {page.subItems && (showServicesDropdown ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                  </motion.button>
+
+                  {page.subItems && showServicesDropdown && (
+                    <div className="bg-orange-50">
+                      {page.subItems.map((sub, subIndex) => (
+                        <button
+                          key={subIndex}
+                          onClick={() => {
+                            sub.action();
+                            setIsMenuOpen(false);
+                          }}
+                          className="block w-full px-6 py-2 text-sm text-orange-700 hover:bg-orange-100 text-left"
+                        >
+                          {sub.title}
+                        </button>
                       ))}
-                    </ul>
+                    </div>
                   )}
-                </li>
+                </div>
               ))}
-              <li>
-                <button onClick={() => { handleNavClick('contact'); setIsMenuOpen(false); }} className="mt-2 px-5 py-2 bg-orange-600 text-white rounded-full font-medium w-full">
+              <motion.div className="py-3 px-4">
+                <motion.button
+                  className="w-full cursor-pointer py-2 bg-orange-600 text-white rounded-md font-medium text-sm hover:bg-orange-700 active:bg-orange-800 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleNavClick('contact')}
+                >
                   Contact Us
-                </button>
-              </li>
-            </ul>
+                </motion.button>
+              </motion.div>
+            </motion.nav>
           </motion.div>
         )}
       </AnimatePresence>
