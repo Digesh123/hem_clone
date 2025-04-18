@@ -1,1 +1,1 @@
-export const BASE_URL = '/hem_clone/'
+export const BASE_URL = ''
