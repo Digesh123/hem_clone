@@ -2,10 +2,10 @@ import React from 'react'
 import HomeSlider from './HomeSlider'
 import WhyChooseUs from './WhyChooseUs'
 import Downloadpdf from './Downloadpdf'
-import { root } from 'postcss'
+import { root1 } from 'postcss'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
- root.render(
+const root1 = ReactDOM.createRoot(document.getElementById('root1'));
+ root1.render(
         <Downloadpdf
         />
 );
