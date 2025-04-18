@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+    --color-main-nav: oklch(0.705 0.213 47.604);
+    --color-main-light: #ffb13c;
+    --color-main-dark: #ff9900;
+    --color-secondary-light: #004b7f;
+    --color-secondary-dark: #101828;
+}

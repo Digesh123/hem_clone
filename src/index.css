@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+* {
+    font-family: 'Urbanist', sans-serif;
+}
+
+/* Hide scrollbar for Chrome, Safari and Edge */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox */
+html {
+    scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE, Edge, and older versions of Firefox */
+body {
+    -ms-overflow-style: none;
+}
