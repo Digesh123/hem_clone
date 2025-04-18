@@ -12,7 +12,6 @@ const Navbar = ({ setActivePage, activePage }) => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -30,57 +29,25 @@ const Navbar = ({ setActivePage, activePage }) => {
   const navItems = [
     { title: 'Home', value: 'home' },
     { title: 'About Us', value: 'about' },
-    { 
-      title: 'Services', 
-      value: 'service', 
-      subItems: [
-        { title: 'Download Profile', type: 'download', href: 'https://digesh123.github.io/hem_clone/dummy.pdf' }
+    {
+      title: 'Services', value: 'service', subItems: [
+        { title: 'Download Profile', href: 'https://digesh123.github.io/hem_clone/dummy.pdf' }
       ]
     },
     { title: 'Our Team', value: 'teams' },
     { title: 'Our Clients', value: 'client' },
     { title: 'Collection in Dubai', value: 'clientDubai' },
     { title: 'Collection in India', value: 'clientIndia' },
-    { title: "FAQ", value: 'faq' },
+    { title: 'FAQ', value: 'faq' },
   ];
-
-  const navContainerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const navItemVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300 }
-    }
-  };
 
   return (
     <>
       <div className="bg-orange-800 text-white py-2">
         <div className="flex justify-between px-4 items-center">
           <div className="flex space-x-4">
-            {[
-              { Icon: FaLinkedin, link: "https://www.linkedin.com/company/hem-groups/" },
-              { Icon: FaInstagram, link: "https://www.instagram.com/hemgroup_" },
-            ].map(({ Icon, link }, i) => (
-              <motion.a
-                key={i}
-                href={link}
-                target='_blank'
-                className="hover:text-orange-400 transition-colors"
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
+            {[{ Icon: FaLinkedin, link: "https://www.linkedin.com/company/hem-groups/" }, { Icon: FaInstagram, link: "https://www.instagram.com/hemgroup_" }].map(({ Icon, link }, i) => (
+              <motion.a key={i} href={link} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
                 <Icon size={16} />
               </motion.a>
             ))}
@@ -90,126 +57,74 @@ const Navbar = ({ setActivePage, activePage }) => {
       </div>
 
       <header className={`sticky top-0 w-full z-50 ${scrolled ? 'py-2' : 'py-3'} bg-orange-200 shadow-md`}>
-        <div className={`mx-auto px-4 md:px-12 transition-all duration-300 ${scrolled ? 'max-w-[90%]' : 'max-w-full'}`}>
+        <div className="mx-auto px-4 md:px-12">
           <div className="flex items-center justify-between h-16">
-
-            {/* Logo */}
-            <motion.div
-              className="flex-shrink-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              onClick={() => { window.location.reload() }}
-            >
+            <motion.div className="flex-shrink-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} onClick={() => window.location.reload()}>
               <img src={BASE_URL + "/logo/logo.png"} alt="Logo" className="h-8 md:h-10 w-auto" />
             </motion.div>
 
-            {/* Desktop Navigation */}
-            <motion.nav
-              className="hidden md:flex items-center space-x-1"
-              variants={navContainerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {navItems.map((page) => (
-                <motion.div
-                  key={page.value}
-                  className="relative group"
-                  variants={navItemVariants}
-                >
-                  <button
-                    onClick={() => handleNavClick(page.value)}
-                    className={`cursor-pointer relative px-4 py-2 capitalize font-medium text-sm tracking-wide ${
-                      activePage === page.value
-                        ? 'text-orange-600'
-                        : 'text-orange-700 hover:text-orange-600'
-                    }`}
-                  >
-                    {page.title}
-                    {activePage === page.value && (
-                      <motion.div
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-orange-600 rounded-full mx-2"
-                        layoutId="activeTab"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
+            <nav className="hidden md:flex items-center space-x-1">
+              {navItems.map((item, index) => (
+                <div key={index} className="relative group">
+                  <button onClick={() => handleNavClick(item.value)} className={`cursor-pointer px-4 py-2 capitalize font-medium text-sm ${activePage === item.value ? 'text-orange-600' : 'text-orange-700 hover:text-orange-600'}`}>
+                    {item.title}
                   </button>
-
-                  {/* Submenu for Services */}
-                  {page.subItems && (
-                    <div className="absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md p-2 top-full mt-1 z-10">
-                      {page.subItems.map((item, i) => (
-                        <a
-                          key={i}
-                          href={item.href}
-                          download
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="whitespace-nowrap px-4 py-2 text-sm text-orange-700 hover:text-orange-800 hover:bg-orange-100 rounded"
-                        >
-                          {item.title}
+                  {item.subItems && (
+                    <div className="absolute left-0 top-full bg-white shadow-md rounded-md py-1 hidden group-hover:block z-50">
+                      {item.subItems.map((sub, subIdx) => (
+                        <a key={subIdx} href={sub.href} download target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-orange-700 hover:bg-orange-100">
+                          {sub.title}
                         </a>
                       ))}
                     </div>
                   )}
-                </motion.div>
+                </div>
               ))}
-            </motion.nav>
-
-            {/* Right Side Icons */}
-            <div className="hidden md:flex items-center space-x-4">
-              <motion.button
-                className="px-5 py-2 bg-orange-600 text-white rounded-full font-medium text-sm cursor-pointer"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 10px 15px rgba(59, 130, 246, 0.4)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => { handleNavClick('contact') }}
-              >
+              <motion.button className="ml-4 px-5 py-2 bg-orange-600 text-white rounded-full font-medium text-sm" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNavClick('contact')}>
                 Contact Us
               </motion.button>
-            </div>
+            </nav>
 
-            {/* Mobile Menu Button */}
             <div className="flex md:hidden">
-              <motion.button
-                className="p-2 rounded-md hover:bg-orange-100 active:bg-orange-200 transition-colors focus:outline-none"
-                whileTap={{ scale: 0.9 }}
-                aria-label="Toggle menu"
-                onClick={toggleMenu}
-              >
-                <AnimatePresence mode="wait">
-                  {isMenuOpen ? (
-                    <motion.div
-                      key="close"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <HiX size={20} className="text-orange-800" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="menu"
-                      initial={{ rotate: 90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <HiMenuAlt4 size={20} className="text-orange-800" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              <motion.button className="p-2" whileTap={{ scale: 0.9 }} aria-label="Toggle menu" onClick={toggleMenu}>
+                {isMenuOpen ? <HiX size={24} className="text-orange-800" /> : <HiMenuAlt4 size={24} className="text-orange-800" />}
               </motion.button>
             </div>
-
           </div>
         </div>
       </header>
 
-      {/* Mobile Nav Dropdown – Optional, let me know if you want this to have the same submenu behavior */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div key="mobileMenu" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="md:hidden bg-orange-100 shadow-lg">
+            <ul className="flex flex-col px-6 py-4 space-y-2">
+              {navItems.map((item, index) => (
+                <li key={index}>
+                  <button onClick={() => handleNavClick(item.value)} className="w-full text-left text-orange-800 font-medium py-2">
+                    {item.title}
+                  </button>
+                  {item.subItems && (
+                    <ul className="ml-4 mt-1 space-y-1">
+                      {item.subItems.map((sub, subIndex) => (
+                        <li key={subIndex}>
+                          <a href={sub.href} download target="_blank" rel="noopener noreferrer" className="block text-sm text-orange-700 hover:text-orange-900">
+                            {sub.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+              <li>
+                <button onClick={() => { handleNavClick('contact'); setIsMenuOpen(false); }} className="mt-2 px-5 py-2 bg-orange-600 text-white rounded-full font-medium w-full">
+                  Contact Us
+                </button>
+              </li>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
