@@ -3,6 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { BASE_URL } from '../config';
 
+import Downloadpdf from './Downloadpdf'
+
+const approot = ReactDOM.createRoot(document.getElementById('root1'));
+ approot.render(
+        <Downloadpdf
+        />
+);
+
 const HomeSlider = ({setActivePage}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
